@@ -481,6 +481,22 @@ static int spi_prettyprint_status_register_plain(struct flashctx *flash)
 	return 0;
 }
 
+static int spi_prettyprint_status_register_plain2(struct flashctx *flash)
+{
+	uint8_t status;
+	uint8_t status2;
+	int ret = spi_read_register(flash, STATUS1, &status);
+	if (ret)
+		return ret;
+	spi_prettyprint_status_register_hex(status);
+		
+	int ret2 = spi_read_register(flash, STATUS2, &status2);
+	if (ret2)
+		return ret2;
+	spi_prettyprint_status_register_hex(status2);
+	return 0;
+}
+
 /* Print the plain hex value and the welwip bits only. */
 static int spi_prettyprint_status_register_default_welwip(struct flashctx *flash)
 {
@@ -1077,6 +1093,7 @@ printlockfunc_t *lookup_printlock_func_ptr(struct flashctx *flash)
 		case SPI_PRETTYPRINT_STATUS_REGISTER_EN25S_WP: return &spi_prettyprint_status_register_en25s_wp;
 		case SPI_PRETTYPRINT_STATUS_REGISTER_N25Q: return &spi_prettyprint_status_register_n25q;
 		case SPI_PRETTYPRINT_STATUS_REGISTER_PLAIN: return &spi_prettyprint_status_register_plain;
+		case SPI_PRETTYPRINT_STATUS_REGISTER_PLAIN2: return &spi_prettyprint_status_register_plain2;
 		case SPI_PRETTYPRINT_STATUS_REGISTER_SST25: return &spi_prettyprint_status_register_sst25;
 		case SPI_PRETTYPRINT_STATUS_REGISTER_SST25VF016: return &spi_prettyprint_status_register_sst25vf016;
 		case SPI_PRETTYPRINT_STATUS_REGISTER_SST25VF040B: return &spi_prettyprint_status_register_sst25vf040b;
